@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.hhj.course.dao.GradeModificationReviewMapper">
+
+    <insert id="insert" keyColumn="id" keyProperty="id" useGeneratedKeys="true">
+        insert into grade_modification_review (grade, account, teachers_course_id,status,introduce,user_id
+      )
+        values (#{grade,jdbcType=INTEGER}, #{account}, #{teacherCourseId,jdbcType=INTEGER}, #{status}, #{introduce}, #{userId}
+      )
+    </insert>
+
+    <select id="select" resultType="cn.hhj.course.entity.GradeModificationReview">
+        SELECT id,grade,account,teachers_course_id AS teacherCourseId,status,introduce,user_id AS userId
+        FROM grade_modification_review
+        WHERE
+        <trim prefix="(" suffix=")" prefixOverrides="AND">
+            <if test="id != null">
+                AND id = #{id,jdbcType=INTEGER}
+            </if>
+            <if test="grade != null">
+                AND grade = #{grade}
+            </if>
+            <if test="account != null">
+                AND account = #{account}
+            </if>
+            <if test="teacherCourseId != null">
+                AND teachers_course_id = #{teacherCourseId}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="introduce != null">
+                AND introduce = #{introduce}
+            </if>
+            <if test="userId != null">
+                AND user_id = #{userId}
+            </if>
+        </trim>
+    </select>
+
+    <select id="selectGradeReviewVoList" resultType="cn.hhj.course.vo.GradeReviewVo">
+        SELECT grade_modification_review.id,grade_modification_review.grade,grade_modification_review.account,
+        grade_modification_review.status,grade_modification_review.introduce,course.name AS courseName,user.name
+        FROM grade_modification_review,teachers_course,user,course
+        WHERE
+        grade_modification_review.teachers_course_id = teachers_course.id
+        AND grade_modification_review.user_id = user.id
+        AND teachers_course.course_id = course.id
+    </select>
+
+    <update id="updateStatusById" parameterType="cn.hhj.course.entity.GradeModificationReview">
+        UPDATE grade_modification_review
+        SET status = #{status}
+        WHERE id = #{id}
+    </update>
+
+</mapper>

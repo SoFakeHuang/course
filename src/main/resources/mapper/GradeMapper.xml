@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.hhj.course.dao.GradeMapper">
+  <resultMap id="BaseResultMap" type="cn.hhj.course.entity.Grade">
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="grade" jdbcType="INTEGER" property="grade" />
+    <result column="user_id" jdbcType="INTEGER" property="user_id" />
+    <result column="teachers_course_id" jdbcType="INTEGER" property="teachers_course_id" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, grade, user_id, teachers_course_id
+  </sql>
+  <select id="selectByExample" parameterType="cn.hhj.course.entity.GradeExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'false' as QUERYID,
+    <include refid="Base_Column_List" />
+    from grade
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.hhj.course.entity.Grade" useGeneratedKeys="true">
+    insert into grade (grade, user_id, teachers_course_id
+      )
+    values (#{grade,jdbcType=INTEGER}, #{user_id,jdbcType=INTEGER}, #{teachers_course_id,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="cn.hhj.course.entity.Grade" useGeneratedKeys="true">
+    insert into grade
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="grade != null">
+        grade,
+      </if>
+      <if test="user_id != null">
+        user_id,
+      </if>
+      <if test="teachers_course_id != null">
+        teachers_course_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="grade != null">
+        #{grade,jdbcType=INTEGER},
+      </if>
+      <if test="user_id != null">
+        #{user_id,jdbcType=INTEGER},
+      </if>
+      <if test="teachers_course_id != null">
+        #{teachers_course_id,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+  <select id="select" resultType="cn.hhj.course.entity.Grade">
+    SELECT *
+    FROM grade
+    WHERE
+    <trim prefixOverrides="AND">
+      <if test="grade != null">
+        AND grade = #{grade,jdbcType=INTEGER}
+      </if>
+      <if test="user_id != null">
+        AND user_id = #{user_id,jdbcType=INTEGER}
+      </if>
+      <if test="teachers_course_id != null">
+        AND teachers_course_id = #{teachers_course_id,jdbcType=INTEGER}
+      </if>
+    </trim>
+  </select>
+  
+  <select id="GradeVoByUserIdYearsSemester" resultType="cn.hhj.course.vo.GradeVo">
+    SELECT c.name AS courseName,teacherName,grade.grade
+    FROM `teachers_course`,grade,user,
+    (SELECT course.id,course.name,user.name AS teacherName
+    from course,user WHERE course.user_id = user.id) c
+    WHERE
+    user.id = grade.user_id
+    AND grade.teachers_course_id = teachers_course.id
+    AND c.id = teachers_course.course_id
+    AND user.id = #{userId}
+    AND semester = #{semester}
+    AND years = #{years}
+  </select>
+
+  <select id="getCourseGradeByTeacherCourseId" resultType="cn.hhj.course.vo.GradeVo">
+    SELECT user.account,user.name AS name,grade,user.id AS userId
+    FROM user,teachers_course,grade
+    WHERE grade.user_id = user.id
+    AND grade.teachers_course_id = teachers_course.id
+    AND teachers_course.id = #{id}
+  </select>
+
+  <update id="updateByUserIdCourseId" parameterType="cn.hhj.course.entity.Grade">
+    UPDATE grade
+    SET grade = #{grade}
+    where grade.user_id = #{userId,jdbcType=INTEGER}
+    AND teachers_course_id = #{teacherCourseId,jdbcType=INTEGER}
+  </update>
+
+</mapper>

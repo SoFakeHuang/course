@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.hhj.course.dao.TeachersCourseMapper">
+  <resultMap id="BaseResultMap" type="cn.hhj.course.entity.TeachersCourse">
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="course_id" jdbcType="INTEGER" property="course_id" />
+    <result column="years" jdbcType="VARCHAR" property="years" />
+    <result column="semester" jdbcType="INTEGER" property="semester" />
+    <result column="classroom" jdbcType="VARCHAR" property="classroom" />
+    <result column="class_time" jdbcType="VARCHAR" property="class_time" />
+    <result column="week" jdbcType="INTEGER" property="week" />
+    <result column="students_number" jdbcType="INTEGER" property="students_number" />
+    <result column="Max_number" jdbcType="INTEGER" property="max_number" />
+    <result column="fulled" jdbcType="INTEGER" property="fulled" />
+    <result column="online" jdbcType="INTEGER" property="online" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, course_id, years, semester, classroom, class_time,week, students_number, Max_number,
+    fulled, online
+  </sql>
+  <select id="selectByExample" parameterType="cn.hhj.course.entity.TeachersCourseExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'false' as QUERYID,
+    <include refid="Base_Column_List" />
+    from teachers_course
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.hhj.course.entity.TeachersCourse" useGeneratedKeys="true">
+    insert into teachers_course (course_id, years, semester, 
+      classroom, class_time,week, students_number,
+      Max_number, fulled, online
+      )
+    values (#{course_id,jdbcType=INTEGER}, #{years,jdbcType=VARCHAR}, #{semester,jdbcType=INTEGER}, 
+      #{classroom,jdbcType=VARCHAR}, #{class_time,jdbcType=VARCHAR}, #{week,jdbcType=INTEGER},#{students_number,jdbcType=INTEGER},
+      #{max_number,jdbcType=INTEGER}, #{fulled,jdbcType=INTEGER}, #{online,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="cn.hhj.course.entity.TeachersCourse" useGeneratedKeys="true">
+    insert into teachers_course
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="course_id != null">
+        course_id,
+      </if>
+      <if test="years != null">
+        years,
+      </if>
+      <if test="semester != null">
+        semester,
+      </if>
+      <if test="classroom != null">
+        classroom,
+      </if>
+      <if test="class_time != null">
+        class_time,
+      </if>
+      <if test="week != null">
+        week,
+      </if>
+      <if test="students_number != null">
+        students_number,
+      </if>
+      <if test="max_number != null">
+        Max_number,
+      </if>
+      <if test="fulled != null">
+        fulled,
+      </if>
+      <if test="online != null">
+        online,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="course_id != null">
+        #{course_id,jdbcType=INTEGER},
+      </if>
+      <if test="years != null">
+        #{years,jdbcType=VARCHAR},
+      </if>
+      <if test="semester != null">
+        #{semester,jdbcType=INTEGER},
+      </if>
+      <if test="classroom != null">
+        #{classroom,jdbcType=VARCHAR},
+      </if>
+      <if test="class_time != null">
+        #{class_time,jdbcType=VARCHAR},
+      </if>
+      <if test="week != null">
+        #{week,jdbcType=INTEGER},
+      </if>
+      <if test="students_number != null">
+        #{students_number,jdbcType=INTEGER},
+      </if>
+      <if test="max_number != null">
+        #{max_number,jdbcType=INTEGER},
+      </if>
+      <if test="fulled != null">
+        #{fulled,jdbcType=INTEGER},
+      </if>
+      <if test="online != null">
+        #{online,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+  <select id="select" resultType="cn.hhj.course.entity.TeachersCourse">
+    SELECT *
+    FROM teachers_course
+    WHERE
+    <trim prefix="(" suffix=")" suffixOverrides="," prefixOverrides="AND">
+      <if test="id != null">
+        AND id = #{id,jdbcType=INTEGER},
+      </if>
+      <if test="course_id != null">
+        AND course_id = #{course_id,jdbcType=INTEGER},
+      </if>
+      <if test="years != null">
+        AND years = #{years,jdbcType=VARCHAR},
+      </if>
+      <if test="semester != null">
+        AND semester = #{semester,jdbcType=INTEGER},
+      </if>
+      <if test="classroom != null">
+        AND classroom = #{classroom,jdbcType=VARCHAR},
+      </if>
+      <if test="class_time != null">
+        AND class_time = #{class_time,jdbcType=VARCHAR},
+      </if>
+      <if test="week != null">
+        AND week = #{week,jdbcType=INTEGER},
+      </if>
+      <if test="students_number != null">
+        AND students_number = #{students_number,jdbcType=INTEGER},
+      </if>
+      <if test="max_number != null">
+        AND max_number = #{max_number,jdbcType=INTEGER},
+      </if>
+      <if test="fulled != null">
+        AND fulled = #{fulled,jdbcType=INTEGER},
+      </if>
+      <if test="online != null">
+        AND online = #{online,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </select>
+
+  <select id="getAllTeacherCourseVo" resultType="cn.hhj.course.vo.TeachersCourseVo">
+    SELECT teachers_course.id, course_id AS courseId, years, semester, classroom,
+     class_time AS classTime,week, students_number AS studentsNumber, Max_number AS maxNumber,fulled,
+      online,course.name AS courseName,course.type
+    FROM teachers_course,course
+    WHERE teachers_course.course_id = course.id
+  </select>
+  
+  <update id="updataById" parameterType="cn.hhj.course.entity.TeachersCourse">
+    UPDATE teachers_course SET
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="course_id != null">
+        course_id = #{course_id,jdbcType=INTEGER},
+      </if>
+      <if test="years != null">
+        years = #{years,jdbcType=VARCHAR},
+      </if>
+      <if test="semester != null">
+        semester = #{semester,jdbcType=INTEGER},
+      </if>
+      <if test="classroom != null">
+        classroom = #{classroom,jdbcType=VARCHAR},
+      </if>
+      <if test="class_time != null">
+        class_time = #{class_time,jdbcType=VARCHAR},
+      </if>
+      <if test="week != null">
+        week = #{week,jdbcType=INTEGER},
+      </if>
+      <if test="students_number != null">
+        students_number = #{students_number,jdbcType=INTEGER},
+      </if>
+      <if test="max_number != null">
+        max_number = #{max_number,jdbcType=INTEGER},
+      </if>
+      <if test="fulled != null">
+        fulled = #{fulled,jdbcType=INTEGER},
+      </if>
+      <if test="online != null">
+        online = #{online,jdbcType=INTEGER},
+      </if>
+    </trim>
+    WHERE id = #{id}
+  </update>
+
+  <select id="getTeacherCourseVoByUserIdYearSemester" resultType="cn.hhj.course.vo.TeachersCourseVo">
+    SELECT c.name AS courseName,week,class_time AS classTime,classroom
+    FROM `teachers_course`,grade,user,
+    (SELECT course.id,course.name,user.name AS teacherName
+    from course,user WHERE course.user_id = user.id) c
+    WHERE
+    user.id = grade.user_id
+    AND grade.teachers_course_id = teachers_course.id
+    AND c.id = teachers_course.course_id
+    AND user.id = #{userId}
+    AND semester = #{semester}
+    AND years = #{years}
+  </select>
+
+  <select id="getCourseVoByUserIdYearSemester" resultType="cn.hhj.course.vo.TeachersCourseVo">
+    SELECT c.name AS courseName,week,class_time AS classTime,classroom,students_number AS studentsNumber,Max_number AS maxNumber,teachers_course.id
+    FROM `teachers_course`,
+    (SELECT course.id,course.name,user.name AS teacherName
+    from course,user WHERE course.user_id = user.id AND user.id = #{userId}) c
+    WHERE
+    c.id = teachers_course.course_id
+    AND semester = #{semester}
+    AND years = #{years}
+  </select>
+
+  <select id="getCourseGradeByAccountYearSemesterCourseName" resultType="cn.hhj.course.vo.TeachersCourseVo">
+    SELECT course.name AS courseName,account,user.name AS name,grade,teachers_course.id AS id
+    FROM (SELECT * FROM course WHERE course.user_id = #{userId})course,user,grade,teachers_course
+    WHERE
+    <trim prefixOverrides="AND">
+      <if test="courseName != null">
+        AND course.name = #{courseName}
+      </if>
+      <if test="account != null">
+        AND user.account = #{account}
+      </if>
+      <if test="years != null">
+        AND years = #{years}
+      </if>
+      <if test="semester != null">
+        AND semester = #{semester}
+      </if>
+    </trim>
+    AND course.id = teachers_course.course_id
+    AND grade.teachers_course_id = teachers_course.id
+    AND grade.user_id = user.id
+  </select>
+</mapper>

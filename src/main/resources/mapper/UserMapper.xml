@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.hhj.course.dao.UserMapper">
+  <resultMap id="BaseResultMap" type="cn.hhj.course.entity.User">
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="account" jdbcType="VARCHAR" property="account" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="department_id" jdbcType="INTEGER" property="department_id" />
+    <result column="class_id" jdbcType="INTEGER" property="class_id" />
+    <result column="sex" jdbcType="INTEGER" property="sex" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, account, password, type, name, phone, department_id, class_id, sex
+  </sql>
+  <select id="selectByExample" parameterType="cn.hhj.course.entity.UserExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'false' as QUERYID,
+    <include refid="Base_Column_List" />
+    from user
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.hhj.course.entity.User" useGeneratedKeys="true">
+    insert into user (account, password, type,
+      name, phone, department_id,
+      claa_id, sex)
+    values (#{account,jdbcType=VARCHAR}, #{password,jdbcType=VARCHAR}, #{type,jdbcType=INTEGER},
+      #{name,jdbcType=VARCHAR}, #{phone,jdbcType=VARCHAR}, #{department_id,jdbcType=INTEGER},
+      #{class_id,jdbcType=INTEGER}, #{sex,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="cn.hhj.course.entity.User" useGeneratedKeys="true">
+    insert into user
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="account != null">
+        account,
+      </if>
+      <if test="password != null">
+        password,
+      </if>
+      <if test="type != null">
+        type,
+      </if>
+      <if test="name != null">
+        name,
+      </if>
+      <if test="phone != null">
+        phone,
+      </if>
+      <if test="department_id != null">
+        department_id,
+      </if>
+      <if test="class_id != null">
+        class_id,
+      </if>
+      <if test="sex != null">
+        sex,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="account != null">
+        #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="password != null">
+        #{password,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="phone != null">
+        #{phone,jdbcType=VARCHAR},
+      </if>
+      <if test="department_id != null">
+        #{department_id,jdbcType=INETEGER},
+      </if>
+      <if test="class_id != null">
+        #{class_id,jdbcType=INETEGER},
+      </if>
+      <if test="sex != null">
+        #{sex,jdbcType=INETEGER},
+      </if>
+    </trim>
+  </insert>
+
+  <select id="getUserInfoVoByUserId" resultType="cn.hhj.course.vo.UserInfoVo">
+    SELECT user.name,department.name AS departmentName,classes.name AS classesName,user.account AS account,user.phone,user.type
+    FROM user left join department on user.department_id = department.id left join classes on user.class_id = classes.id
+    WHERE user.id = #{id}
+  </select>
+
+  <select id="selectByAccount" resultType="cn.hhj.course.entity.User">
+    SELECT *
+    FROM user
+    WHERE user.account = #{account}
+  </select>
+</mapper>

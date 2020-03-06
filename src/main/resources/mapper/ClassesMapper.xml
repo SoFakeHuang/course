@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.hhj.course.dao.ClassesMapper">
+  <resultMap id="BaseResultMap" type="cn.hhj.course.entity.Classes">
+    <result column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="students_number" jdbcType="INTEGER" property="students_number" />
+    <result column="department_id" jdbcType="INTEGER" property="department_id" />
+    <result column="head_teacher" jdbcType="INTEGER" property="head_teacher" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    id, name, students_number, department_id, head_teacher
+  </sql>
+  <select id="selectByExample" parameterType="cn.hhj.course.entity.ClassesExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    'false' as QUERYID,
+    <include refid="Base_Column_List" />
+    from classes
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <insert id="insert" keyColumn="id" keyProperty="id" parameterType="cn.hhj.course.entity.Classes" useGeneratedKeys="true">
+    insert into classes (name, students_number, department_id, 
+      head_teacher)
+    values (#{name,jdbcType=VARCHAR}, #{students_number,jdbcType=INTEGER}, #{department_id,jdbcType=INTEGER}, 
+      #{head_teacher,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" keyColumn="id" keyProperty="id" parameterType="cn.hhj.course.entity.Classes" useGeneratedKeys="true">
+    insert into classes
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        name,
+      </if>
+      <if test="students_number != null">
+        students_number,
+      </if>
+      <if test="department_id != null">
+        department_id,
+      </if>
+      <if test="head_teacher != null">
+        head_teacher,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="name != null">
+        #{name,jdbcType=VARCHAR},
+      </if>
+      <if test="students_number != null">
+        #{students_number,jdbcType=INTEGER},
+      </if>
+      <if test="department_id != null">
+        #{department_id,jdbcType=INTEGER},
+      </if>
+      <if test="head_teacher != null">
+        #{head_teacher,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+</mapper>
